@@ -12,7 +12,7 @@ class ReposModel {
   factory ReposModel.fromJson(final json) {
     return ReposModel(
       reposName: json["name"],
-      reposDesc: json["description"],
+      reposDesc: json["description"] == null ? 'No description' : json["description"],
       reposLink: json["html_url"]
     );
   }
