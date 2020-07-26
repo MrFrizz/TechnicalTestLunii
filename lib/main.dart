@@ -8,6 +8,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
+import 'ReposModel.dart';
+import 'UserReposModel.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -15,32 +18,49 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Welcome to Flutter',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Welcome to Flutter'),
-        ),
-        body: Center(
-          child: Text('Hello World'),
+      home: UserReposScreen(),
+    );
+  }
+}
+
+class UserReposScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: FutureBuilder<UserReposModel>(
+          future: getReposOfUser(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final userRepos = snapshot.data;
+
+              return Text("Name : ${userRepos.username}" );
+            } else if (snapshot.hasError) {
+              return Text("ERROR");
+            }
+
+            return CircularProgressIndicator();
+          },
         ),
       ),
     );
   }
 }
 
-  void testAsync() async {
-//    final url = "https://api.github.com/users/Steven-K-JOHNSON/repos";
+
+  Future<UserReposModel> getReposOfUser() async {
     final url = "https://api.github.com/users/MrFrizz/repos";
     final response = await http.get(url);
+    List<ReposModel> reposModels = List<ReposModel>();
 
-    final json = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      final jsonRepos = jsonDecode(response.body);
+      for(final value in jsonRepos)
+        reposModels.add(ReposModel.fromJson(value));
 
-//    print(json);
-//    print('\n');
-//    print(json[0]["id"]);
-//    print('\n');
-//    print(json[0]["owner"]["login"]);
+      return UserReposModel.fromJson(jsonRepos, reposModels);
 
-    for(final value in json) {
-      print(value["name"]);
+    } else {
+      throw Exception("User not find");
     }
   }
