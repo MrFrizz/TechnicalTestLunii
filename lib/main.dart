@@ -26,15 +26,12 @@ class UserReposScreen extends StatefulWidget {
 }
 
 class _UserReposScreenState extends State<UserReposScreen> {
-
   final TextEditingController controller = new TextEditingController();
-
   String usernameInput = '';
   String usernameInputOnChanged = '';
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.cyan[200],
@@ -138,7 +135,6 @@ class _UserReposScreenState extends State<UserReposScreen> {
                   final userRepos = snapshot.data;
 
                   return Container(
-//                    height: size.height-165,
                     child: Column(
                       children: <Widget>[
                         Row(
