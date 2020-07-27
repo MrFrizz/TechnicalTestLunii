@@ -1,4 +1,4 @@
-import 'ReposModel.dart';
+import 'package:test_tech_lunii/Models/ReposModel.dart';
 
 class UserReposModel {
   final String username;
